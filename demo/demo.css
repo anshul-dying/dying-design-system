@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "../theme.css";
+
+@source "../src";
+@source "./";
+
+html, body {
+  background-color: var(--color-canvas, #141416);
+  color: var(--color-text-primary, #ffffff);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
