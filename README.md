@@ -5,8 +5,11 @@
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v4.0-38bdf8.svg?style=flat-square)](https://tailwindcss.com/)
 [![Radix UI](https://img.shields.io/badge/Radix_UI-Primitives-black.svg?style=flat-square)](https://www.radix-ui.com/)
 [![WCAG](https://img.shields.io/badge/WCAG-2.2_AAA%2FAA-success.svg?style=flat-square)](https://www.w3.org/WAI/standards-guidelines/wcag/)
+[![Live Demo](https://img.shields.io/badge/Live_Showcase-GitHub_Pages-black?style=flat-square&logo=github)](https://anshul-dying.github.io/dying-design-system/)
 
 > **A monochrome graphite and dark acrylic design system engineered for high-fidelity audio streaming and precision desktop applications.**
+
+🔗 **Live Interactive Playground:** [https://anshul-dying.github.io/dying-design-system/](https://anshul-dying.github.io/dying-design-system/)
 
 ---
 
