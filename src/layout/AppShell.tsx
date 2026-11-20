@@ -136,20 +136,22 @@ export const AppShell = React.forwardRef<HTMLDivElement, AppShellProps>(
         {/* Scrollable Main Content Stage */}
         <div className="relative flex flex-1 flex-col h-screen min-w-0 overflow-hidden">
           {/* Mobile Top Header (lg:hidden) */}
-          <header className="lg:hidden flex items-center justify-between h-14 px-4 border-b border-border-subtle bg-sidebar shrink-0 z-30 select-none">
-            <button
-              type="button"
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
-              aria-label="Open navigation menu"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-            <div className="text-sm font-semibold tracking-tight text-white flex items-center gap-2">
-              <span>GaneGan</span>
-            </div>
-            <div className="w-9" aria-hidden="true" />
-          </header>
+          {!isFullBleed && (
+            <header className="lg:hidden flex items-center justify-between h-14 px-4 border-b border-border-subtle bg-sidebar shrink-0 z-30 select-none">
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus"
+                aria-label="Open navigation menu"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <div className="text-sm font-semibold tracking-tight text-white flex items-center gap-2">
+                <span>GaneGan</span>
+              </div>
+              <div className="w-9" aria-hidden="true" />
+            </header>
+          )}
 
           {/* Global / Desktop Header Slot */}
           {header && (

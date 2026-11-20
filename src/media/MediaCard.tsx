@@ -75,6 +75,7 @@ export const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
           <img
             src={imageUrl}
             alt={title}
+            referrerPolicy="no-referrer"
             className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             loading="lazy"
           />

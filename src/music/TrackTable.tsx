@@ -13,6 +13,8 @@ export interface TrackTableProps extends React.HTMLAttributes<HTMLDivElement> {
   onTrackPause?: () => void;
   onLikeToggle?: (track: TrackData, liked: boolean) => void;
   onActionClick?: (track: TrackData, event: React.MouseEvent) => void;
+  onArtistClick?: (artist: string, artistId?: string, event?: React.MouseEvent) => void;
+  onAlbumClick?: (album: string, albumId?: string, event?: React.MouseEvent) => void;
   showHeader?: boolean;
   showAlbum?: boolean;
   showThumbnails?: boolean;
@@ -32,6 +34,8 @@ export const TrackTable = React.forwardRef<HTMLDivElement, TrackTableProps>(
       onTrackPause,
       onLikeToggle,
       onActionClick,
+      onArtistClick,
+      onAlbumClick,
       showHeader = true,
       showAlbum = true,
       showThumbnails = true,
@@ -97,6 +101,8 @@ export const TrackTable = React.forwardRef<HTMLDivElement, TrackTableProps>(
                   onPause={onTrackPause}
                   onLikeToggle={onLikeToggle}
                   onActionClick={onActionClick}
+                  onArtistClick={onArtistClick}
+                  onAlbumClick={onAlbumClick}
                   showThumbnail={showThumbnails}
                   showAlbum={showAlbum}
                   compact={compact}

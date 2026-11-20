@@ -49,6 +49,14 @@ export {
 
 // Foundational UI Components
 export {
+  BrandLogo,
+  GaneGanLogo,
+  BrandSymbolMark,
+  type BrandLogoProps,
+  type BrandLogoVariant,
+  type BrandLogoSize,
+  type BrandLogoColor,
+  type BrandSymbolMarkProps,
   Button,
   type ButtonProps,
   IconButton,

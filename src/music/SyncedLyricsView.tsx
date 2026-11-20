@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { Badge } from "../components/Badge";
 import { cn } from "../utils/cn";
 
 export interface LyricLine {
@@ -9,11 +10,14 @@ export interface LyricLine {
 }
 
 export interface SyncedLyricsViewProps extends React.HTMLAttributes<HTMLDivElement> {
-  lyrics: LyricLine[];
-  currentTime: number; // in seconds
+  lyrics?: LyricLine[];
+  currentTime?: number; // in seconds
   onSeek?: (time: number) => void;
   showTimestamps?: boolean;
   autoScroll?: boolean;
+  synced?: boolean;
+  plainLyrics?: string;
+  source?: string;
 }
 
 export const SyncedLyricsView: React.FC<SyncedLyricsViewProps> = ({
@@ -23,6 +27,9 @@ export const SyncedLyricsView: React.FC<SyncedLyricsViewProps> = ({
   onSeek,
   showTimestamps = false,
   autoScroll = true,
+  synced,
+  plainLyrics,
+  source,
   ...props
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,13 +37,21 @@ export const SyncedLyricsView: React.FC<SyncedLyricsViewProps> = ({
   const [userIsScrolling, setUserIsScrolling] = useState(false);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Find index of the currently playing lyric line
-  const activeIndex = lyrics.reduce((currActive, line, index) => {
-    return line.time <= currentTime ? index : currActive;
-  }, -1);
+  // Determine mode: synced karaoke or unsynced plain text
+  const isSynced = synced !== undefined ? synced : lyrics.length > 0;
+  const hasLyrics = lyrics.length > 0;
+  const hasPlainLyrics = Boolean(plainLyrics && plainLyrics.trim().length > 0);
 
-  // Handle user manual scroll interruption
+  // Find index of the currently playing lyric line for synced mode
+  const activeIndex = hasLyrics
+    ? lyrics.reduce((currActive, line, index) => {
+        return line.time <= currentTime ? index : currActive;
+      }, -1)
+    : -1;
+
+  // Handle user manual scroll interruption (2.8s pause on user scroll)
   const handleScroll = () => {
+    if (!isSynced) return;
     setUserIsScrolling(true);
     if (scrollTimeoutRef.current) {
       clearTimeout(scrollTimeoutRef.current);
@@ -46,16 +61,16 @@ export const SyncedLyricsView: React.FC<SyncedLyricsViewProps> = ({
     }, 2800);
   };
 
-  // Smooth auto-scroll to center the active line
+  // Smooth auto-scroll to center the active line in synced mode
   useEffect(() => {
-    if (!autoScroll || userIsScrolling || activeIndex === -1) return;
+    if (!isSynced || !autoScroll || userIsScrolling || activeIndex === -1) return;
     if (activeLineRef.current && containerRef.current) {
       activeLineRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
     }
-  }, [activeIndex, autoScroll, userIsScrolling]);
+  }, [activeIndex, autoScroll, userIsScrolling, isSynced]);
 
   useEffect(() => {
     return () => {
@@ -71,27 +86,64 @@ export const SyncedLyricsView: React.FC<SyncedLyricsViewProps> = ({
     return `${mins}:${s < 10 ? "0" : ""}${s}`;
   };
 
-  if (!lyrics || lyrics.length === 0) {
+  // Empty state when neither synced lines nor plain lyrics exist
+  if ((isSynced && !hasLyrics) || (!isSynced && !hasPlainLyrics && !hasLyrics)) {
     return (
       <div
         className={cn(
-          "flex h-full min-h-[300px] w-full items-center justify-center text-neutral-500",
+          "flex h-full min-h-[300px] w-full items-center justify-center text-text-tertiary",
           className
         )}
         {...props}
       >
-        <p className="text-sm font-medium tracking-wide">No synced lyrics available</p>
+        <p className="text-sm font-medium tracking-wide">No lyrics available</p>
       </div>
     );
   }
 
+  // Dual mode: Unsynced Mode
+  if (!isSynced) {
+    const displayPlain = plainLyrics || lyrics.map((l) => l.text).join("\n");
+
+    return (
+      <div
+        ref={containerRef}
+        className={cn(
+          "relative flex h-full w-full flex-col overflow-y-auto px-6 py-12 scrollbar-none scroll-smooth select-text",
+          "mask-[linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)]",
+          className
+        )}
+        {...props}
+      >
+        <div className="flex flex-col items-center max-w-2xl mx-auto w-full py-8">
+          <div className="mb-8">
+            <Badge variant="glass">Unsynced Lyrics</Badge>
+          </div>
+
+          <div className="w-full text-center">
+            <p className="whitespace-pre-line text-lg sm:text-xl font-medium text-text-secondary leading-loose tracking-wide">
+              {displayPlain}
+            </p>
+          </div>
+
+          {/* Footer attribution */}
+          <div className="pt-12 pb-8 flex justify-center">
+            <Badge variant="glass" size="xs">
+              Lyrics provided by {source || "LRCLIB"}
+            </Badge>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Dual mode: Synced Karaoke Mode
   return (
     <div
       ref={containerRef}
       onScroll={handleScroll}
       className={cn(
         "relative flex h-full w-full flex-col overflow-y-auto px-6 py-32 scrollbar-none select-none scroll-smooth",
-        // Top and bottom fade masks
         "mask-[linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]",
         className
       )}
@@ -108,22 +160,33 @@ export const SyncedLyricsView: React.FC<SyncedLyricsViewProps> = ({
               ref={isActive ? activeLineRef : null}
               onClick={() => onSeek?.(line.time)}
               layout
+              animate={{
+                scale: isActive ? 1.04 : 1,
+              }}
               transition={{
                 type: "spring",
                 stiffness: 300,
                 damping: 30,
               }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSeek?.(line.time);
+                }
+              }}
               className={cn(
-                "group relative cursor-pointer py-2 transition-all duration-300 origin-left",
+                "group relative cursor-pointer py-2 transition-opacity duration-300 origin-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus rounded-lg",
                 isActive
-                  ? "scale-105 opacity-100"
+                  ? "opacity-100"
                   : isPast
                   ? "opacity-30 hover:opacity-75"
                   : "opacity-35 hover:opacity-80"
               )}
             >
               {showTimestamps && (
-                <span className="mr-3 font-mono text-xs text-neutral-500 group-hover:text-neutral-300">
+                <span className="mr-3 font-mono text-xs text-text-tertiary group-hover:text-text-secondary">
                   {formatLyricTime(line.time)}
                 </span>
               )}
@@ -132,23 +195,22 @@ export const SyncedLyricsView: React.FC<SyncedLyricsViewProps> = ({
                 className={cn(
                   "font-sans text-2xl font-bold tracking-tight md:text-3xl transition-all duration-300 leading-relaxed block",
                   isActive
-                    ? "text-white drop-shadow-[0_0_24px_var(--dying-aura-primary,rgba(255,255,255,0.75))] text-glow-neon"
-                    : "text-neutral-300 group-hover:text-white"
+                    ? "text-text-primary drop-shadow-[0_0_24px_rgba(255,255,255,0.75)] dying-lyrics-glow"
+                    : "text-text-secondary group-hover:text-text-primary"
                 )}
-                style={
-                  isActive
-                    ? {
-                        textShadow:
-                          "0 0 20px var(--dying-aura-primary, rgba(255, 255, 255, 0.6)), 0 0 40px var(--dying-aura-secondary, rgba(255, 255, 255, 0.2))",
-                      }
-                    : undefined
-                }
               >
                 {line.text}
               </span>
             </motion.div>
           );
         })}
+
+        {/* Footer attribution */}
+        <div className="pt-12 pb-8 flex justify-center">
+          <Badge variant="glass" size="xs">
+            Lyrics provided by {source || "LRCLIB"}
+          </Badge>
+        </div>
       </div>
     </div>
   );

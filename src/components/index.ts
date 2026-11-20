@@ -3,6 +3,18 @@ export { Button, type ButtonProps } from "./Button";
 export { IconButton, type IconButtonProps, ButtonGroup, type ButtonGroupProps } from "./IconButton";
 export { ThemeSwitcher, type ThemeSwitcherProps } from "./ThemeSwitcher";
 
+// Brand Identity
+export {
+  BrandLogo,
+  GaneGanLogo,
+  BrandSymbolMark,
+  type BrandLogoProps,
+  type BrandLogoVariant,
+  type BrandLogoSize,
+  type BrandLogoColor,
+  type BrandSymbolMarkProps,
+} from "./BrandLogo";
+
 // Feedback
 export { Spinner, type SpinnerProps } from "./Spinner";
 export { Badge, type BadgeProps } from "./Badge";

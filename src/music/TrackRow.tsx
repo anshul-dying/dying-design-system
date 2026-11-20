@@ -7,7 +7,9 @@ export interface TrackData {
   id: string;
   title: string;
   artist: string;
+  artistId?: string;
   album?: string;
+  albumId?: string;
   duration?: number; // in seconds
   thumbnailUrl?: string;
   thumbnail?: string; // for compatibility with @mp/player-core Track
@@ -26,6 +28,8 @@ export interface TrackRowProps
   onPause?: () => void;
   onLikeToggle?: (track: TrackData, liked: boolean) => void;
   onActionClick?: (track: TrackData, event: React.MouseEvent) => void;
+  onArtistClick?: (artist: string, artistId?: string, e?: React.MouseEvent) => void;
+  onAlbumClick?: (album: string, albumId?: string, e?: React.MouseEvent) => void;
   showThumbnail?: boolean;
   showAlbum?: boolean;
   compact?: boolean;
@@ -50,6 +54,8 @@ export const TrackRow = React.forwardRef<HTMLDivElement, TrackRowProps>(
       onPause,
       onLikeToggle,
       onActionClick,
+      onArtistClick,
+      onAlbumClick,
       showThumbnail = true,
       showAlbum = true,
       compact = false,
@@ -157,6 +163,7 @@ export const TrackRow = React.forwardRef<HTMLDivElement, TrackRowProps>(
               <img
                 src={track.thumbnailUrl || track.thumbnail}
                 alt={track.title}
+                referrerPolicy="no-referrer"
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
               />
@@ -178,17 +185,41 @@ export const TrackRow = React.forwardRef<HTMLDivElement, TrackRowProps>(
           >
             {track.title}
           </span>
-          <span className="truncate text-xs text-text-secondary">
-            {track.artist}
-          </span>
+          {onArtistClick ? (
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                onArtistClick(track.artist, track.artistId, e);
+              }}
+              className="truncate text-xs text-text-secondary hover:text-white hover:underline cursor-pointer"
+            >
+              {track.artist}
+            </span>
+          ) : (
+            <span className="truncate text-xs text-text-secondary">
+              {track.artist}
+            </span>
+          )}
         </div>
 
         {/* Album (Desktop) */}
         {showAlbum && (
           <div className="hidden md:flex min-w-0 flex-1 items-center pr-4">
-            <span className="truncate text-xs text-text-tertiary group-hover:text-text-secondary">
-              {track.album || "—"}
-            </span>
+            {onAlbumClick && track.album && track.album !== "—" ? (
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAlbumClick(track.album!, track.albumId, e);
+                }}
+                className="truncate text-xs text-text-tertiary group-hover:text-text-secondary hover:text-white hover:underline cursor-pointer"
+              >
+                {track.album}
+              </span>
+            ) : (
+              <span className="truncate text-xs text-text-tertiary group-hover:text-text-secondary">
+                {track.album || "—"}
+              </span>
+            )}
           </div>
         )}
 

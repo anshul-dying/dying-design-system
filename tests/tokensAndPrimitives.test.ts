@@ -16,6 +16,9 @@ import {
   Heading,
   Separator,
   VisuallyHidden,
+  BrandLogo,
+  GaneGanLogo,
+  BrandSymbolMark,
   Button,
   IconButton,
   ButtonGroup,
@@ -39,32 +42,11 @@ import {
   GlassPanel,
   GlassCard,
   OledBase,
-  ScrubSlider,
-  SpringButton,
-  PageHeader,
-  HeroBannerCard,
-  HeroCarousel,
-  MediaShelf,
-  MediaCard,
-  MoodChip,
-  MoodChipBar,
-  QuickPicksGrid,
-  QuickPicksColumn,
-  QuickPickRow,
-  TrackRow,
-  TrackTable,
-  SyncedLyricsView,
-  FullImmersionLyrics,
-  FullPlayerView,
-  FloatingPlayerPill,
-  PlayerBar,
-  AmbientAura,
-  SoundWave,
   ThemeProvider,
   useTheme,
 } from "../src/index";
 
-describe("Dying Design System — Enterprise Quality Suite", () => {
+describe("Dying Design System — Tokens & Primitives Suite", () => {
   describe("1. Design Tokens & DTCG Standard Compliance", () => {
     test("verifies DTCG schema and top-level token groups", () => {
       assert.ok(dyingTokens, "dyingTokens must be defined");
@@ -102,6 +84,14 @@ describe("Dying Design System — Enterprise Quality Suite", () => {
       assert.strictEqual(semanticTokens.text.secondary, "#98989d");
       assert.strictEqual(semanticTokens.text.tertiary, "#86868b");
       assert.strictEqual(semanticTokens.text.kicker, "#86868b");
+    });
+
+    test("verifies GaneGan brand vermillion/coral identity tokens", () => {
+      assert.strictEqual(primitiveTokens.colors.brandCoral, "#FF6A4D");
+      assert.strictEqual(primitiveTokens.colors.brandVermillion, "#D6452B");
+      assert.strictEqual(semanticTokens.brand.primary, "#FF6A4D");
+      assert.strictEqual(semanticTokens.brand.primaryLight, "#D6452B");
+      assert.ok(semanticTokens.brand.subtle.includes("rgba"));
     });
 
     test("verifies 4px baseline spacing rhythm", () => {
@@ -146,7 +136,7 @@ describe("Dying Design System — Enterprise Quality Suite", () => {
     });
   });
 
-  describe("3. Component Library Public API Verification", () => {
+  describe("3. Foundational Primitives & UI Verification", () => {
     test("verifies all foundational primitives are valid React components", () => {
       const primitives = [
         Box,
@@ -198,33 +188,6 @@ describe("Dying Design System — Enterprise Quality Suite", () => {
         assert.ok(Component, "Component must be defined");
       });
     });
-
-    test("verifies media and music streaming domain components", () => {
-      const domainComponents = [
-        PageHeader,
-        HeroBannerCard,
-        HeroCarousel,
-        MediaShelf,
-        MediaCard,
-        MoodChip,
-        MoodChipBar,
-        QuickPicksGrid,
-        QuickPicksColumn,
-        QuickPickRow,
-        TrackRow,
-        TrackTable,
-        SyncedLyricsView,
-        FullImmersionLyrics,
-        FullPlayerView,
-        FloatingPlayerPill,
-        PlayerBar,
-        AmbientAura,
-        SoundWave,
-      ];
-      domainComponents.forEach((Component) => {
-        assert.ok(Component, "Domain component must be defined");
-      });
-    });
   });
 
   describe("4. Accessibility & Theming Standards", () => {
@@ -238,6 +201,35 @@ describe("Dying Design System — Enterprise Quality Suite", () => {
       assert.strictEqual(componentTokens.playerPill.maxWidth, "720px");
       assert.strictEqual(componentTokens.playerBar.height, "88px");
       assert.strictEqual(componentTokens.scrubber.trackHeight, "4px");
+    });
+  });
+
+  describe("5. Brand Identity & Logo System (GaneGan)", () => {
+    test("verifies BrandLogo renders mark, wordmark, full lockup, and tiles", () => {
+      const mark = React.createElement(BrandLogo, { variant: "mark", size: "sm" });
+      assert.ok(React.isValidElement(mark));
+
+      const wordmark = React.createElement(BrandLogo, { variant: "wordmark", size: "md" });
+      assert.ok(React.isValidElement(wordmark));
+
+      const full = React.createElement(BrandLogo, {
+        variant: "full",
+        size: "lg",
+        subtitle: "Streaming",
+      });
+      assert.ok(React.isValidElement(full));
+
+      const appIcon = React.createElement(BrandLogo, { variant: "app-icon", size: "md" });
+      assert.ok(React.isValidElement(appIcon));
+
+      const monoTile = React.createElement(BrandLogo, { variant: "monochrome-tile", size: "md" });
+      assert.ok(React.isValidElement(monoTile));
+    });
+
+    test("verifies GaneGanLogo alias and BrandSymbolMark SVG primitive", () => {
+      assert.strictEqual(GaneGanLogo, BrandLogo);
+      const symbol = React.createElement(BrandSymbolMark, { size: 32 });
+      assert.ok(React.isValidElement(symbol));
     });
   });
 });

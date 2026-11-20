@@ -14,6 +14,8 @@ export interface QuickPickRowProps
   onQueue?: (track: TrackData) => void;
   onSelect?: (track: TrackData) => void;
   onActionClick?: (track: TrackData, e: React.MouseEvent) => void;
+  onArtistClick?: (artist: string, artistId?: string, e?: React.MouseEvent) => void;
+  onAlbumClick?: (album: string, albumId?: string, e?: React.MouseEvent) => void;
   className?: string;
 }
 
@@ -28,6 +30,8 @@ export const QuickPickRow = React.forwardRef<HTMLDivElement, QuickPickRowProps>(
       onQueue,
       onSelect,
       onActionClick,
+      onArtistClick,
+      onAlbumClick,
       className,
       tabIndex,
       ...props
@@ -141,8 +145,37 @@ export const QuickPickRow = React.forwardRef<HTMLDivElement, QuickPickRowProps>(
               {track.title}
             </span>
             <span className="text-xs text-text-secondary truncate mt-1 leading-tight group-hover:text-text-primary/80 transition-colors">
-              {track.artist}
-              {track.album ? ` • ${track.album}` : ""}
+              {onArtistClick ? (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onArtistClick(track.artist, track.artistId, e);
+                  }}
+                  className="hover:text-white hover:underline cursor-pointer"
+                >
+                  {track.artist}
+                </span>
+              ) : (
+                track.artist
+              )}
+              {track.album && (
+                <>
+                  {" • "}
+                  {onAlbumClick ? (
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onAlbumClick(track.album!, track.albumId, e);
+                      }}
+                      className="hover:text-white hover:underline cursor-pointer"
+                    >
+                      {track.album}
+                    </span>
+                  ) : (
+                    track.album
+                  )}
+                </>
+              )}
             </span>
           </div>
         </div>

@@ -56,6 +56,11 @@ export const primitiveTokens = {
     error: "#f43f5e",
     info: "#38bdf8",
 
+    // Brand Colors (GaneGan Vermillion/Coral Identity)
+    brandCoral: "#FF6A4D",
+    brandVermillion: "#D6452B",
+    brandPrimary: "#FF6A4D",
+
     // Backward-compatibility aliases
     zinc950: "#121214",
     zinc900: "#1e1e22",
@@ -231,6 +236,13 @@ export const semanticTokens = {
     warning: primitiveTokens.colors.warning,
     error: primitiveTokens.colors.error,
     info: primitiveTokens.colors.info,
+  },
+  brand: {
+    primary: "#FF6A4D",
+    primaryLight: "#D6452B",
+    primaryDark: "#FF6A4D",
+    subtle: "rgba(255, 106, 77, 0.15)",
+    glow: "rgba(255, 106, 77, 0.25)",
   },
 } as const;
 

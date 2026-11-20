@@ -42,6 +42,12 @@
   --color-status-error: #f43f5e;
   --color-status-info: #38bdf8;
 
+  /* Brand Colors (GaneGan Identity) */
+  --color-brand-primary: var(--brand-primary, #FF6A4D);
+  --color-brand-hover: var(--brand-hover, #ff856c);
+  --color-brand-subtle: var(--brand-subtle, rgba(255, 106, 77, 0.15));
+  --color-brand-glow: var(--brand-glow, rgba(255, 106, 77, 0.25));
+
   /* Backward-compatibility aliases */
   --color-oled-black: #141416;
   --color-oled-surface: #1e1e22;
@@ -88,6 +94,12 @@
   --glass-frosted: rgba(30, 30, 34, 0.85);
   --glass-elevated: rgba(30, 30, 34, 0.92);
 
+  /* Brand Theme Tokens (Dark Mode) */
+  --brand-primary: #FF6A4D;
+  --brand-hover: #ff856c;
+  --brand-subtle: rgba(255, 106, 77, 0.15);
+  --brand-glow: rgba(255, 106, 77, 0.25);
+
   /* Acrylic Glass Refraction */
   --acrylic-ultra-thin: rgba(255, 255, 255, 0.03);
   --acrylic-thin: rgba(255, 255, 255, 0.06);
@@ -125,6 +137,12 @@
 
   --glass-frosted: rgba(16, 16, 18, 0.90);
   --glass-elevated: rgba(16, 16, 18, 0.96);
+
+  /* Brand Theme Tokens (OLED Mode) */
+  --brand-primary: #FF6A4D;
+  --brand-hover: #ff856c;
+  --brand-subtle: rgba(255, 106, 77, 0.20);
+  --brand-glow: rgba(255, 106, 77, 0.30);
 }
 
 [data-theme="light"] {
@@ -146,6 +164,12 @@
 
   --glass-frosted: rgba(255, 255, 255, 0.85);
   --glass-elevated: rgba(255, 255, 255, 0.95);
+
+  /* Brand Theme Tokens (Light Mode - Deep Vermillion for High Contrast) */
+  --brand-primary: #D6452B;
+  --brand-hover: #b83820;
+  --brand-subtle: rgba(214, 69, 43, 0.12);
+  --brand-glow: rgba(214, 69, 43, 0.18);
 }
 
 /* Dying Design System Utility Classes */
@@ -171,6 +195,10 @@
   -webkit-backdrop-filter: blur(32px) saturate(150%);
   border: 1px solid var(--border-muted);
   box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.18), 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.dying-lyrics-glow {
+  text-shadow: 0 0 20px var(--dying-aura-primary, rgba(255, 255, 255, 0.6)), 0 0 40px var(--dying-aura-secondary, rgba(255, 255, 255, 0.2));
 }
 
 /* Standardized Accessible Focus Ring */

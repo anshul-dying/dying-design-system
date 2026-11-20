@@ -3,7 +3,7 @@ import { cn } from "../utils/cn";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: "neutral" | "accent" | "glass" | "success" | "warning" | "error" | "info";
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
   dot?: boolean;
 }
 
@@ -28,6 +28,7 @@ const dotColors = {
 };
 
 const sizeStyles = {
+  xs: "px-1.5 py-0.5 text-[10px] gap-1 rounded",
   sm: "px-2 py-0.5 text-[11px] gap-1.5 rounded-md",
   md: "px-2.5 py-1 text-xs gap-1.5 rounded-lg",
 };
