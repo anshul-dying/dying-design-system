@@ -1,6 +1,5 @@
 import React from 'react';
 
-// KaTeX renderer using window.katex (loaded via CDN in index.html)
 export interface MathViewProps {
   math: string;
   block?: boolean;
@@ -9,12 +8,9 @@ export interface MathViewProps {
 
 export function MathView({ math, block = false, className = '' }: MathViewProps) {
   const [rendered, setRendered] = React.useState<string>(() => {
-    if (typeof window !== 'undefined' && (window as unknown as { katex?: { renderToString: (tex: string, opts: object) => string } }).katex) {
+    if (typeof window !== 'undefined' && (window as any).katex) {
       try {
-        return (window as unknown as { katex: { renderToString: (tex: string, opts: object) => string } }).katex.renderToString(math, {
-          displayMode: block,
-          throwOnError: false,
-        });
+        return (window as any).katex.renderToString(math, { displayMode: block, throwOnError: false });
       } catch {
         return math;
       }
@@ -24,7 +20,7 @@ export function MathView({ math, block = false, className = '' }: MathViewProps)
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
-      const k = (window as unknown as { katex?: { renderToString: (tex: string, opts: object) => string } }).katex;
+      const k = (window as any).katex;
       if (k) {
         try {
           setRendered(k.renderToString(math, { displayMode: block, throwOnError: false }));
